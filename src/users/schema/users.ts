@@ -6,6 +6,8 @@ export interface IUsers extends Document {
   employee?: boolean
   condition?: string
   phone: string
+  dailyRate?: number
+  active?: boolean
 }
 
 const usersSchema: Schema = new Schema({
@@ -33,6 +35,16 @@ const usersSchema: Schema = new Schema({
   phone: {
     type: String,
     required: true
+  },
+  dailyRate: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  active: {
+    type: Boolean,
+    required: false,
+    default: true, 
   },
 }, {
   timestamps: true,

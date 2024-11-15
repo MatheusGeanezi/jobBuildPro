@@ -1,6 +1,6 @@
-import { findUserRepository } from '../repository/findUserRepository'
+import { findOneUserRepository } from '../repository/findOneUserRepository'
 import { postUserRepository } from '../repository/postUserRepository'
-import Users, { IUsers } from '../schema/users'
+import { IUsers } from '../schema/users'
 
 export const postUserService = async (body: IUsers): Promise<void> => {
   const { name, phone } = body
@@ -13,7 +13,7 @@ export const postUserService = async (body: IUsers): Promise<void> => {
     throw new Error('O campo telefone é obrigatório!')
   }
 
-  const findUser = await findUserRepository({ phone })
+  const findUser = await findOneUserRepository({ phone })
 
   if (!findUser) {
     await postUserRepository(body)
