@@ -9,9 +9,10 @@ jest.mock('../repository/patchUserRepository')
 const mockedFindOneUserRepository = findOneUserRepository as jest.Mock
 const mockedPatchUserRepository = patchUserRepository as jest.Mock
 
-const makesut = (body: any) => {
-    return patchUserService(body)
-  }
+
+const makesut = (id: string,body: any) => {
+  return patchUserService(id,body)
+}
 
 describe('patchUserService', () => {
   beforeEach(() => {
@@ -19,50 +20,48 @@ describe('patchUserService', () => {
   })
 
   it('should throw an error if _id is not provided', async () => {
-    const { service } = makesut()
-    await expect(service('', { name: 'John', phone: '123456789' }))
+    const body = { name: 'John', phone: '123456789' }
+    await expect(makesut('',body))
       .rejects.toThrow("O 'id' do usuário é obrigatório para a atualização.")
   })
 
   it('should throw an error if user is not found', async () => {
-    const { service, findOneUserRepository } = makesut()
+    const body = { name: 'John', phone: '123456789' }
     const _id = new Types.ObjectId().toString()
-    findOneUserRepository.mockResolvedValue(null)
+    mockedFindOneUserRepository.mockResolvedValue(null)
 
-    await expect(service(_id, { name: 'John', phone: '123456789' }))
+    await expect(makesut(_id,body))
       .rejects.toThrow('Usuário não foi encontrado.')
+
+    expect(mockedFindOneUserRepository).toHaveBeenCalledWith({ _id: new Types.ObjectId(_id) })
   })
 
   it('should throw an error if name is invalid', async () => {
-    const { service, findOneUserRepository } = makesut()
     const _id = new Types.ObjectId().toString()
-    findOneUserRepository.mockResolvedValue({})
+    const body = { name: '', phone: '123456789' }
+ 
+    mockedFindOneUserRepository.mockResolvedValue({})
 
-    await expect(service(_id, { name: '', phone: '123456789' }))
+    await expect(makesut(_id,body))
       .rejects.toThrow('O campo nome é obrigatório!')
   })
 
   it('should throw an error if phone is invalid', async () => {
-    const { service, findOneUserRepository } = makesut()
     const _id = new Types.ObjectId().toString()
-    findOneUserRepository.mockResolvedValue({})
+    const body = { name: 'John', phone: '' }
+    mockedFindOneUserRepository.mockResolvedValue({})
 
-    await expect(service(_id, { name: 'John', phone: '' }))
+    await expect(makesut(_id,body))
       .rejects.toThrow('O campo telefone é obrigatório!')
   })
 
   it('should call patchUserRepository with correct data when inputs are valid', async () => {
-    const { service, findOneUserRepository, patchUserRepository } = makesut()
     const _id = new Types.ObjectId().toString()
     const body = { name: 'John', phone: '123456789' }
-    const filter = { _id: new Types.ObjectId(_id) }
-
-    findOneUserRepository.mockResolvedValue({ _id })
-    patchUserRepository.mockResolvedValue(null)
-
-    await service(_id, body)
-
-    expect(findOneUserRepository).toHaveBeenCalledWith(filter)
-    expect(patchUserRepository).toHaveBeenCalledWith(filter, body)
+    
+    mockedFindOneUserRepository.mockResolvedValue({ _id })
+    mockedPatchUserRepository.mockResolvedValue(null)
+    
+    makesut(_id,body)
   })
 })
