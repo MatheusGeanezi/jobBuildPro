@@ -1,13 +1,14 @@
 import { Request, Response } from 'express'
-import { postUserService } from '../services/postUsersService'
+import { patchUserService } from '../services/patchUsersService'
 
-export const postUserController = async (
+
+export const patchUserController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    await postUserService(req.body)
-    res.status(200).json({ message: 'Funcionario adicionado' })
+    await patchUserService(req.params.id,req.body)
+    res.status(200).json({ message: 'Funcionario alterado' })
   } catch (error) {
     if (error instanceof Error) {
       res.status(409).json({ error: error.message })
