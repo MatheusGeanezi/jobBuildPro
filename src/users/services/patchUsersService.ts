@@ -28,6 +28,4 @@ export const patchUserService = async (
   }
 
   await patchUserRepository(filter, body)
-
-
 }
