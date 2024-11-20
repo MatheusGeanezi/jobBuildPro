@@ -19,7 +19,7 @@ describe('postUserService', () => {
   })
 
   it('Should create a user if not exists', async () => {
-    const userData = { name: 'João', phone: '123456788' }
+    const userData = { name: 'João', phone: '123456789' }
 
     mockedFindOneUserRepository.mockResolvedValue(null) 
     mockedPostUserRepository.mockResolvedValue(null) 
