@@ -1,6 +1,7 @@
 import { findOneUserRepository } from '../repository/findOneUserRepository'
 import { Types } from 'mongoose'
 import { updateUserAttendanceRepository } from '../repository/updateUserAttendanceRepository'
+import { sendNotification } from '../../integrations/rabbitmq/sendNotification'
 
 interface UpdateAttendanceInput {
   userId: string
@@ -17,7 +18,7 @@ export const updateUserAttendanceService = async ({
 
   const user = await findOneUserRepository(
     { _id: new Types.ObjectId(userId) },
-    { attendace: 1 }
+    { attendace: 1, name: 1 }
   )
 
   if (!user) {
@@ -49,6 +50,11 @@ export const updateUserAttendanceService = async ({
       }
     ]
   })
+
+  const message = present
+    ? `Funcionario ${user.name} registrou presença hoje.`
+    : `Funcionario ${user.name} foi marcado como ausente hoje.`
+  await sendNotification(message)
 
   return {
     message: `Presença ${present ? 'confirmada' : 'marcada como ausência'} para hoje.`,
