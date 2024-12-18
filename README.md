@@ -19,6 +19,9 @@ Antes de iniciar, certifique-se de ter os seguintes requisitos instalados:
 - [Node.js](https://nodejs.org/) (versão 18 ou superior)
 - [MongoDB](https://www.mongodb.com/) rodando localmente ou em um cluster remoto
 - Gerenciador de pacotes `npm` (vem junto com o Node.js)
+- **RabbitMQ** instalado e em execução (localmente ou remotamente)
+    - Para instalar RabbitMQ no Windows, você pode usar o [Chocolatey](https://chocolatey.org/) ou seguir as instruções oficiais em [RabbitMQ website](https://www.rabbitmq.com/)
+    - Alternativamente, você pode utilizar [RabbitMQ Cloud](https://www.cloudamqp.com/)
 
 ---
 
